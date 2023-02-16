@@ -197,3 +197,52 @@ export const addPermission = async (req, res) => {
       .json({ response: "error", type: "server-error", msg: "Server error" });
   }
 };
+
+// Add permission
+export const deletePermission = async (req, res) => {
+  const { id } = req.params;
+  const { permission } = req.body;
+
+  // Convert id to integer
+  parseInt(id);
+
+  const user = await User.findByPk(id);
+
+  if (!user) {
+    return res.status(400).json({
+      response: "error",
+      type: "user-not-found",
+      msg: "User not found",
+    });
+  }
+
+  const namePermission = permission.toLowerCase();
+
+  const permissionExists = await Permission.findOne({
+    where: { name: namePermission, id_user: user.id },
+  });
+
+  if (!permissionExists) {
+    return res.status(400).json({
+      response: "error",
+      type: "permission-not-found",
+      msg: "Permission not found",
+    });
+  }
+
+  try {
+    await Permission.destroy({
+      where: { name: namePermission, id_user: user.id },
+    });
+
+    res.status(201).json({
+      response: "success",
+      msg: "Deleted permission",
+    });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ response: "error", type: "server-error", msg: "Server error" });
+  }
+};

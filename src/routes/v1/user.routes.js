@@ -1,11 +1,12 @@
 import express from "express";
 import {
-  validatorAddPermission,
   validatorCreateUser,
+  validatorPermission,
 } from "../../validators/user.validator";
 import {
   addPermission,
   createUser,
+  deletePermission,
   getAllUsers,
   getUserById,
   updateUser,
@@ -17,6 +18,9 @@ router.route("/").post(validatorCreateUser, createUser).get(getAllUsers);
 // Get user
 router.route("/:id").get(getUserById).put(updateUser);
 // Add permission
-router.route("/add-permission/:id").post(validatorAddPermission, addPermission);
+router
+  .route("/permission/:id")
+  .post(validatorPermission, addPermission)
+  .delete(validatorPermission, deletePermission);
 
 export default router;

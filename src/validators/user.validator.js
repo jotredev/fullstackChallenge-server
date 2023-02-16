@@ -25,7 +25,7 @@ export const validatorCreateUser = [
   },
 ];
 
-export const validatorAddPermission = [
+export const validatorPermission = [
   check("permission").exists().withMessage("The name permission is required"),
   (req, res, next) => {
     try {
