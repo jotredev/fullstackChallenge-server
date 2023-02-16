@@ -89,3 +89,58 @@ export const getUserById = async (req, res) => {
       .json({ response: "error", type: "server-error", msg: "Server error" });
   }
 };
+
+// Update user
+export const updateUser = async (req, res) => {
+  const { id } = req.params;
+  const { name, lastname, email, password } = req.body;
+
+  // Convert id to integer
+  parseInt(id);
+
+  const user = await User.findByPk(id);
+
+  if (!user) {
+    return res.status(400).json({
+      response: "error",
+      type: "user-not-found",
+      msg: "User not found",
+    });
+  }
+
+  if (email) {
+    // Check if user already exists
+    const emailExists = await User.findOne({ where: { email: email } });
+
+    if (emailExists) {
+      return res.status(400).json({
+        response: "error",
+        type: "email-already-exists",
+        msg: "Email already exists",
+      });
+    }
+  }
+
+  try {
+    let hashedPassword;
+
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      hashedPassword = await bcrypt.hash(password, salt);
+    }
+
+    user.name = name || user.name;
+    user.lastname = lastname || user.lastname;
+    user.email = email?.toLowerCase() || user.email;
+    user.password = hashedPassword || user.password;
+
+    const savedUser = await user.save();
+
+    res.status(201).json({ response: "success", user: savedUser });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ response: "error", type: "server-error", msg: "Server error" });
+  }
+};

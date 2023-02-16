@@ -22,7 +22,7 @@ dotenv.config();
 // Connect to database
 (async () => {
   try {
-    await sequelize.sync({ force: true });
+    await sequelize.sync();
     await sequelize.authenticate();
     console.log("Connection has been established successfully.");
   } catch (error) {
