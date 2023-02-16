@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 // Routes
 import userRoutes from "./routes/v1/user.routes";
+import authRoutes from "./routes/v1/auth.routes";
 // Database
 import { sequelize } from "./database/config";
 import "./models/user.model";
@@ -38,6 +39,7 @@ app.use(cors());
 
 // Routing
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/auth", authRoutes);
 
 // Start express app
 app.listen(PORT, () => {
