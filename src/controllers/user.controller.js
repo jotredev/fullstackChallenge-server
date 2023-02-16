@@ -4,7 +4,21 @@ import bcrypt from "bcrypt";
 
 // Create user
 export const createUser = async (req, res) => {
+  const { auth } = req;
   const { name, lastname, email, password } = req.body;
+
+  // Verify is admin
+  const isAdmin = auth?.permissions.some(
+    (permission) => permission.name === "admin"
+  );
+
+  if (!isAdmin) {
+    return res.status(403).json({
+      response: "error",
+      type: "not-admin",
+      msg: "Not admin",
+    });
+  }
 
   // Check if user already exists
   const emailExists = await User.findOne({ where: { email: email } });
@@ -50,6 +64,21 @@ export const createUser = async (req, res) => {
 
 // Get all users
 export const getAllUsers = async (req, res) => {
+  const { auth } = req;
+
+  // Verify is admin
+  const isAdmin = auth?.permissions.some(
+    (permission) => permission.name === "admin"
+  );
+
+  if (!isAdmin) {
+    return res.status(403).json({
+      response: "error",
+      type: "not-admin",
+      msg: "Not admin",
+    });
+  }
+
   try {
     const users = await User.findAll({ order: [["id", "DESC"]] });
     res.status(201).json({
@@ -66,7 +95,21 @@ export const getAllUsers = async (req, res) => {
 
 // Get user
 export const getUserById = async (req, res) => {
+  const { auth } = req;
   const { id } = req.params;
+
+  // Verify is admin
+  const isAdmin = auth?.permissions.some(
+    (permission) => permission.name === "admin"
+  );
+
+  if (!isAdmin) {
+    return res.status(403).json({
+      response: "error",
+      type: "not-admin",
+      msg: "Not admin",
+    });
+  }
 
   // Convert id to integer
   parseInt(id);
@@ -93,8 +136,22 @@ export const getUserById = async (req, res) => {
 
 // Update user
 export const updateUser = async (req, res) => {
+  const { auth } = req;
   const { id } = req.params;
   const { name, lastname, email, password } = req.body;
+
+  // Verify is admin
+  const isAdmin = auth?.permissions.some(
+    (permission) => permission.name === "admin"
+  );
+
+  if (!isAdmin) {
+    return res.status(403).json({
+      response: "error",
+      type: "not-admin",
+      msg: "Not admin",
+    });
+  }
 
   // Convert id to integer
   parseInt(id);
@@ -148,8 +205,22 @@ export const updateUser = async (req, res) => {
 
 // Add permission
 export const addPermission = async (req, res) => {
+  const { auth } = req;
   const { id } = req.params;
   const { permission } = req.body;
+
+  // Verify is admin
+  const isAdmin = auth?.permissions.some(
+    (permission) => permission.name === "admin"
+  );
+
+  if (!isAdmin) {
+    return res.status(403).json({
+      response: "error",
+      type: "not-admin",
+      msg: "Not admin",
+    });
+  }
 
   // Convert id to integer
   parseInt(id);
@@ -200,8 +271,22 @@ export const addPermission = async (req, res) => {
 
 // Add permission
 export const deletePermission = async (req, res) => {
+  const { auth } = req;
   const { id } = req.params;
   const { permission } = req.body;
+
+  // Verify is admin
+  const isAdmin = auth?.permissions.some(
+    (permission) => permission.name === "admin"
+  );
+
+  if (!isAdmin) {
+    return res.status(403).json({
+      response: "error",
+      type: "not-admin",
+      msg: "Not admin",
+    });
+  }
 
   // Convert id to integer
   parseInt(id);
@@ -249,7 +334,21 @@ export const deletePermission = async (req, res) => {
 
 // Delete user
 export const deleteUser = async (req, res) => {
+  const { auth } = req;
   const { id } = req.params;
+
+  // Verify is admin
+  const isAdmin = auth?.permissions.some(
+    (permission) => permission.name === "admin"
+  );
+
+  if (!isAdmin) {
+    return res.status(403).json({
+      response: "error",
+      type: "not-admin",
+      msg: "Not admin",
+    });
+  }
 
   // Convert id to integer
   parseInt(id);

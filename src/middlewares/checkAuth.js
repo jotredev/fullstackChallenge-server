@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.model";
+import Permission from "../models/permission.model";
 
 const checkAuth = async (req, res, next) => {
   let token;
@@ -13,10 +14,14 @@ const checkAuth = async (req, res, next) => {
 
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      req.auth = await User.findByPk(decoded.id);
+      req.auth = await User.findOne({
+        where: { id: decoded.id },
+        include: { model: Permission, required: true },
+      });
 
       return next();
     } catch (error) {
+      console.log(error);
       return res
         .status(401)
         .json({ response: "error", msg: "Not authorized, token failed" });

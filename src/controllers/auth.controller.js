@@ -12,8 +12,8 @@ export const login = async (req, res) => {
   if (!user) {
     return res.status(404).json({
       response: "error",
-      msg: "User not found",
-      type: "user-not-found",
+      msg: "User or password incorrect",
+      type: "user-or-password-incorrect",
     });
   }
 
@@ -30,11 +30,11 @@ export const login = async (req, res) => {
 
   try {
     // Generate jsonwebtoken
-    const jwt = await generateJWT(user.id);
+    const token = await generateJWT(user.id);
     // No return password
     user.set("password", undefined, { strict: false });
     // Response
-    res.status(201).json({ response: "success", user, jwt });
+    res.status(201).json({ response: "success", user, token });
   } catch (error) {
     console.log(error);
     return res
