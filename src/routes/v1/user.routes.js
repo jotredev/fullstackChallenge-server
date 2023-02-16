@@ -1,6 +1,10 @@
 import express from "express";
-import { validatorCreateUser } from "../../validators/user.validator";
 import {
+  validatorAddPermission,
+  validatorCreateUser,
+} from "../../validators/user.validator";
+import {
+  addPermission,
   createUser,
   getAllUsers,
   getUserById,
@@ -12,4 +16,7 @@ const router = express.Router();
 router.route("/").post(validatorCreateUser, createUser).get(getAllUsers);
 // Get user
 router.route("/:id").get(getUserById).put(updateUser);
+// Add permission
+router.route("/add-permission/:id").post(validatorAddPermission, addPermission);
+
 export default router;

@@ -24,3 +24,15 @@ export const validatorCreateUser = [
     }
   },
 ];
+
+export const validatorAddPermission = [
+  check("permission").exists().withMessage("The name permission is required"),
+  (req, res, next) => {
+    try {
+      validationResult(req).throw();
+      return next();
+    } catch (error) {
+      res.status(403).json({ errors: error.array() });
+    }
+  },
+];

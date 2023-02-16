@@ -1,4 +1,5 @@
 import User from "../models/user.model";
+import Permission from "../models/permission.model";
 import bcrypt from "bcrypt";
 
 // Create user
@@ -137,6 +138,58 @@ export const updateUser = async (req, res) => {
     const savedUser = await user.save();
 
     res.status(201).json({ response: "success", user: savedUser });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ response: "error", type: "server-error", msg: "Server error" });
+  }
+};
+
+// Add permission
+export const addPermission = async (req, res) => {
+  const { id } = req.params;
+  const { permission } = req.body;
+
+  // Convert id to integer
+  parseInt(id);
+
+  const user = await User.findByPk(id);
+
+  if (!user) {
+    return res.status(400).json({
+      response: "error",
+      type: "user-not-found",
+      msg: "User not found",
+    });
+  }
+
+  const namePermission = permission.toLowerCase();
+
+  const permissionExists = await Permission.findOne({
+    where: { name: namePermission, id_user: user.id },
+  });
+
+  if (permissionExists) {
+    return res.status(400).json({
+      response: "error",
+      type: "user-already-has-permission",
+      msg: "User already has permission",
+    });
+  }
+
+  try {
+    const newPermission = new Permission({
+      name: namePermission,
+      id_user: parseInt(user.id),
+    });
+
+    const savedPermission = await newPermission.save();
+
+    res.status(201).json({
+      response: "success",
+      permission: savedPermission,
+    });
   } catch (error) {
     console.log(error);
     res
