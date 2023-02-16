@@ -2,8 +2,13 @@ import { sequelize } from "../database/config";
 import { DataTypes } from "sequelize";
 
 const User = sequelize.define(
-  "User",
+  "users",
   {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -18,10 +23,6 @@ const User = sequelize.define(
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false,
-    },
-    perm_admin: {
-      type: DataTypes.BOOLEAN,
       allowNull: false,
     },
   },
