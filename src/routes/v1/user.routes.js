@@ -7,6 +7,7 @@ import {
   addPermission,
   createUser,
   deletePermission,
+  deleteUser,
   getAllUsers,
   getUserById,
   updateUser,
@@ -16,7 +17,7 @@ const router = express.Router();
 // Create user, get all users
 router.route("/").post(validatorCreateUser, createUser).get(getAllUsers);
 // Get user
-router.route("/:id").get(getUserById).put(updateUser);
+router.route("/:id").get(getUserById).put(updateUser).delete(deleteUser);
 // Add permission
 router
   .route("/permission/:id")

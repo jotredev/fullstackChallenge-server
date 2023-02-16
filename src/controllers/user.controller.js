@@ -246,3 +246,35 @@ export const deletePermission = async (req, res) => {
       .json({ response: "error", type: "server-error", msg: "Server error" });
   }
 };
+
+// Delete user
+export const deleteUser = async (req, res) => {
+  const { id } = req.params;
+
+  // Convert id to integer
+  parseInt(id);
+
+  const user = await User.findByPk(id);
+
+  if (!user) {
+    return res.status(400).json({
+      response: "error",
+      type: "user-not-found",
+      msg: "User not found",
+    });
+  }
+
+  try {
+    await User.destroy({ where: { id } });
+
+    res.status(201).json({
+      response: "success",
+      msg: "Deleted user",
+    });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ response: "error", type: "server-error", msg: "Server error" });
+  }
+};
