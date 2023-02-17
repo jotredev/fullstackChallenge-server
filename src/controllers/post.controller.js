@@ -145,12 +145,12 @@ export const updatePost = async (req, res) => {
   const { title, desc } = req.body;
 
   // Verify if you have permissions
-  // Permission of Create, Read, Delete posts
-  const permCRDposts = auth?.permissions.some(
-    (permission) => permission.name === "crd_posts"
+  // Permission of update posts
+  const permUpdatePosts = auth?.permissions.some(
+    (permission) => permission.name === "update_posts"
   );
 
-  if (!permCRDposts) {
+  if (!permUpdatePosts) {
     return res.status(403).json({
       response: "error",
       type: "not-permissions",
