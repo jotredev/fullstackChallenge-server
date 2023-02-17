@@ -37,3 +37,20 @@ export const validatorCreateReview = [
     }
   },
 ];
+
+// Validator get post
+export const validatorGetPost = [
+  param("id")
+    .exists()
+    .withMessage("The id of post is required")
+    .isInt()
+    .withMessage("The parameter must be integer"),
+  (req, res, next) => {
+    try {
+      validationResult(req).throw();
+      return next();
+    } catch (error) {
+      res.status(403).json({ errors: error.array() });
+    }
+  },
+];

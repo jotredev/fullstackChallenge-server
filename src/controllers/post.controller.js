@@ -74,10 +74,12 @@ export const getAllPosts = async (req, res) => {
   }
 };
 
+// Create review
 export const createReview = async (req, res) => {
   const { id } = req.params;
   const { name, rating, comment } = req.body;
 
+  // Get post by id
   const post = await Post.findByPk(id);
 
   if (!post) {
@@ -101,6 +103,35 @@ export const createReview = async (req, res) => {
     const savedReview = await review.save();
 
     res.status(201).json({ response: "success", review: savedReview });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ response: "error", type: "server-error", msg: "Server error" });
+  }
+};
+
+// Get post by id
+export const getPostById = async (req, res) => {
+  const { id } = req.params;
+
+  // Get post
+  const post = await Post.findOne({
+    where: { id },
+    include: { model: Review, required: true },
+  });
+
+  if (!post) {
+    return res.status(404).json({
+      response: "error",
+      type: "post-not-found",
+      msg: "Post not found",
+    });
+  }
+
+  try {
+    // Response
+    res.status(201).json({ response: "success", post });
   } catch (error) {
     console.log(error);
     res

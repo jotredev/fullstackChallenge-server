@@ -2,12 +2,14 @@ import express from "express";
 import {
   validatorCreatePost,
   validatorCreateReview,
+  validatorGetPost,
 } from "../../validators/post.validator";
 import checkAuth from "../../middlewares/checkAuth";
 import {
   createPost,
   createReview,
   getAllPosts,
+  getPostById,
 } from "../../controllers/post.controller";
 const router = express.Router();
 
@@ -19,5 +21,8 @@ router
 
 // Create review
 router.post("/reviews/:id", validatorCreateReview, createReview);
+
+// Get post
+router.get("/:id", validatorGetPost, getPostById);
 
 export default router;
