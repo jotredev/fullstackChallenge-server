@@ -1,13 +1,23 @@
 import express from "express";
-import { validatorCreatePost } from "../../validators/post.validator";
+import {
+  validatorCreatePost,
+  validatorCreateReview,
+} from "../../validators/post.validator";
 import checkAuth from "../../middlewares/checkAuth";
-import { createPost, getAllPosts } from "../../controllers/post.controller";
+import {
+  createPost,
+  createReview,
+  getAllPosts,
+} from "../../controllers/post.controller";
 const router = express.Router();
 
-// Create post
+// Create post, get all posts
 router
   .route("/")
   .post(validatorCreatePost, checkAuth, createPost)
   .get(getAllPosts);
+
+// Create review
+router.post("/reviews/:id", validatorCreateReview, createReview);
 
 export default router;

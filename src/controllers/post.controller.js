@@ -61,10 +61,46 @@ export const getAllPosts = async (req, res) => {
         model: Review,
         attributes: ["name", "rating", "comment", "createdAt"],
       },
+      order: [["createdAt", "DESC"]],
     });
 
     // Response
     res.status(201).json({ response: "success", posts });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ response: "error", type: "server-error", msg: "Server error" });
+  }
+};
+
+export const createReview = async (req, res) => {
+  const { id } = req.params;
+  const { name, rating, comment } = req.body;
+
+  const post = await Post.findByPk(id);
+
+  if (!post) {
+    return res.status(404).json({
+      response: "error",
+      type: "post-not-found",
+      msg: "Post not found",
+    });
+  }
+
+  try {
+    // Create review
+    const review = new Review({
+      name,
+      rating,
+      comment,
+      id_post: post.id,
+    });
+
+    // Save review
+    const savedReview = await review.save();
+
+    res.status(201).json({ response: "success", review: savedReview });
   } catch (error) {
     console.log(error);
     res
