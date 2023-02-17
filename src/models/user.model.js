@@ -1,7 +1,8 @@
 import { sequelize } from "../database/config";
 import { DataTypes } from "sequelize";
-import Permission from "./permission.model";
 import bcrypt from "bcrypt";
+import Permission from "./permission.model";
+import Post from "./post.model";
 
 const User = sequelize.define(
   "users",
@@ -38,8 +39,19 @@ User.hasMany(Permission, {
   sourceKey: "id",
 });
 
+User.hasMany(Post, {
+  foreignKey: "created_by",
+  sourceKey: "id",
+});
+
 Permission.belongsTo(User, {
   foreignKey: "id_user",
+  targetKey: "id",
+  onDelete: "CASCADE",
+});
+
+Post.belongsTo(User, {
+  foreignKey: "created_by",
   targetKey: "id",
   onDelete: "CASCADE",
 });

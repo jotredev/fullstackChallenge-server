@@ -1,16 +1,18 @@
 import { sequelize } from "../database/config";
 import { DataTypes } from "sequelize";
-import User from "./user.model";
 
-const Log = sequelize.define(
-  "logs",
+const Post = sequelize.define(
+  "posts",
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    description: {
+    title: {
+      type: DataTypes.STRING,
+    },
+    desc: {
       type: DataTypes.STRING,
     },
   },
@@ -19,4 +21,4 @@ const Log = sequelize.define(
   }
 );
 
-export default Log;
+export default Post;
