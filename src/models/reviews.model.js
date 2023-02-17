@@ -1,19 +1,21 @@
 import { sequelize } from "../database/config";
 import { DataTypes } from "sequelize";
-import Review from "./reviews.model";
 
-const Post = sequelize.define(
-  "posts",
+const Review = sequelize.define(
+  "reviews",
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    title: {
+    name: {
       type: DataTypes.STRING,
     },
-    desc: {
+    rating: {
+      type: DataTypes.INTEGER,
+    },
+    comment: {
       type: DataTypes.STRING,
     },
   },
@@ -22,15 +24,4 @@ const Post = sequelize.define(
   }
 );
 
-Post.hasMany(Review, {
-  foreignKey: "id_post",
-  sourceKey: "id",
-});
-
-Review.belongsTo(Post, {
-  foreignKey: "id_post",
-  targetKey: "id",
-  onDelete: "CASCADE",
-});
-
-export default Post;
+export default Review;

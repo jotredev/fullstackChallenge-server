@@ -1,5 +1,6 @@
 import Post from "../models/post.model";
 import Log from "../models/log.model";
+import Review from "../models/reviews.model";
 
 // Create post
 export const createPost = async (req, res) => {
@@ -21,23 +22,49 @@ export const createPost = async (req, res) => {
   }
 
   try {
+    // Create post
     const post = new Post({
       title,
       desc,
       created_by: auth.id,
     });
 
+    // Save post
     const savedPost = await post.save();
 
+    // Create log
     const log = new Log({
       description: `Usuario ${auth.id} creo el post ${savedPost.id}`,
     });
 
+    // Save log
     const savedLog = await log.save();
 
+    // Response
     res
       .status(201)
       .json({ response: "success", post: savedPost, log: savedLog });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ response: "error", type: "server-error", msg: "Server error" });
+  }
+};
+
+// Get all posts
+export const getAllPosts = async (req, res) => {
+  try {
+    // Get all posts with reviews
+    const posts = await Post.findAll({
+      include: {
+        model: Review,
+        attributes: ["name", "rating", "comment", "createdAt"],
+      },
+    });
+
+    // Response
+    res.status(201).json({ response: "success", posts });
   } catch (error) {
     console.log(error);
     res
