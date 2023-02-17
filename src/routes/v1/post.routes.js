@@ -3,6 +3,7 @@ import {
   validatorCreatePost,
   validatorCreateReview,
   validatorGetPost,
+  validatorUpdatePost,
 } from "../../validators/post.validator";
 import checkAuth from "../../middlewares/checkAuth";
 import {
@@ -10,6 +11,7 @@ import {
   createReview,
   getAllPosts,
   getPostById,
+  updatePost,
 } from "../../controllers/post.controller";
 const router = express.Router();
 
@@ -23,6 +25,9 @@ router
 router.post("/reviews/:id", validatorCreateReview, createReview);
 
 // Get post
-router.get("/:id", validatorGetPost, getPostById);
+router
+  .route("/:id")
+  .get(validatorGetPost, getPostById)
+  .put(validatorUpdatePost, checkAuth, updatePost);
 
 export default router;

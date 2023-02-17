@@ -27,7 +27,7 @@ export const validatorCreateReview = [
     .withMessage("The rating is required")
     .isInt({ min: 1, max: 5 })
     .withMessage("The rating must be an integer between 1 and 5"),
-  check("comment").exists().withMessage("The name of user is required"),
+  check("comment").exists().withMessage("The comment of user is required"),
   (req, res, next) => {
     try {
       validationResult(req).throw();
@@ -40,6 +40,23 @@ export const validatorCreateReview = [
 
 // Validator get post
 export const validatorGetPost = [
+  param("id")
+    .exists()
+    .withMessage("The id of post is required")
+    .isInt()
+    .withMessage("The parameter must be integer"),
+  (req, res, next) => {
+    try {
+      validationResult(req).throw();
+      return next();
+    } catch (error) {
+      res.status(403).json({ errors: error.array() });
+    }
+  },
+];
+
+// Validator update post
+export const validatorUpdatePost = [
   param("id")
     .exists()
     .withMessage("The id of post is required")
