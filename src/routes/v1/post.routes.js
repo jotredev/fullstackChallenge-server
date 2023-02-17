@@ -2,13 +2,13 @@ import express from "express";
 import {
   validatorCreatePost,
   validatorCreateReview,
-  validatorGetPost,
-  validatorUpdatePost,
+  validatorId,
 } from "../../validators/post.validator";
 import checkAuth from "../../middlewares/checkAuth";
 import {
   createPost,
   createReview,
+  deletePost,
   getAllPosts,
   getPostById,
   updatePost,
@@ -27,7 +27,8 @@ router.post("/reviews/:id", validatorCreateReview, createReview);
 // Get post
 router
   .route("/:id")
-  .get(validatorGetPost, getPostById)
-  .put(validatorUpdatePost, checkAuth, updatePost);
+  .get(validatorId, getPostById)
+  .put(validatorId, checkAuth, updatePost)
+  .delete(validatorId, checkAuth, deletePost);
 
 export default router;

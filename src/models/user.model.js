@@ -37,23 +37,23 @@ const User = sequelize.define(
 User.hasMany(Permission, {
   foreignKey: "id_user",
   sourceKey: "id",
+  onDelete: "CASCADE",
 });
 
 User.hasMany(Post, {
   foreignKey: "created_by",
   sourceKey: "id",
+  onDelete: "CASCADE",
 });
 
 Permission.belongsTo(User, {
   foreignKey: "id_user",
   targetKey: "id",
-  onDelete: "CASCADE",
 });
 
 Post.belongsTo(User, {
   foreignKey: "created_by",
   targetKey: "id",
-  onDelete: "CASCADE",
 });
 
 // Insert admin default
@@ -77,8 +77,20 @@ Post.belongsTo(User, {
       name: "admin",
       id_user: 1,
     };
+    const permCRD = {
+      id: 2,
+      name: "crd_posts",
+      id_user: 1,
+    };
+    const permUpdatePosts = {
+      id: 3,
+      name: "update_posts",
+      id_user: 1,
+    };
     await User.create(newUser);
     await Permission.create(permAdmin);
+    await Permission.create(permCRD);
+    await Permission.create(permUpdatePosts);
   }
 })();
 

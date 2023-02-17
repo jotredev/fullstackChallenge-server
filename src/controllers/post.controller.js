@@ -177,6 +177,7 @@ export const updatePost = async (req, res) => {
     // Ssave post
     const savedPost = await post.save();
 
+    // Create log
     const log = new Log({
       description: `Usuario ${auth.id} actualizó el post ${savedPost.id}`,
     });
@@ -186,6 +187,58 @@ export const updatePost = async (req, res) => {
 
     // Response
     res.status(201).json({ response: "success", post: savedPost });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ response: "error", type: "server-error", msg: "Server error" });
+  }
+};
+
+// Delete post
+export const deletePost = async (req, res) => {
+  const { auth } = req;
+  const { id } = req.params;
+
+  // Verify if you have permissions
+  // Permission of Create, Read, Delete posts
+  const permCRDposts = auth?.permissions.some(
+    (permission) => permission.name === "crd_posts"
+  );
+
+  if (!permCRDposts) {
+    return res.status(403).json({
+      response: "error",
+      type: "not-permissions",
+      msg: "Not permissions",
+    });
+  }
+
+  // Get post
+  const post = await Post.findByPk(id);
+
+  if (!post) {
+    return res.status(404).json({
+      response: "error",
+      type: "post-not-found",
+      msg: "Post not found",
+    });
+  }
+
+  try {
+    // Delete post
+    await Post.destroy({ where: { id } });
+
+    // Create log
+    const log = new Log({
+      description: `Usuario ${auth.id} eliminó el post ${post.id}`,
+    });
+
+    // Save log
+    await log.save();
+
+    // Response
+    res.status(201).json({ response: "success", msg: "Deleted post" });
   } catch (error) {
     console.log(error);
     res
