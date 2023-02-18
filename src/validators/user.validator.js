@@ -2,7 +2,7 @@ import { check, validationResult } from "express-validator";
 
 export const validatorCreateUser = [
   check("name").exists().withMessage("The name is required"),
-  check("lastname").exists().withMessage("The first lastname is required"),
+  check("lastname").exists().withMessage("The lastname is required"),
   check("email")
     .exists()
     .isEmail()

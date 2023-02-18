@@ -30,6 +30,6 @@ router
 router
   .route("/permission/:id")
   .post(validatorPermission, checkAuth, addPermission)
-  .delete(validatorPermission, checkAuth, deletePermission);
+  .put(validatorPermission, checkAuth, deletePermission);
 
 export default router;

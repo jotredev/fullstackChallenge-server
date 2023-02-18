@@ -80,7 +80,10 @@ export const getAllUsers = async (req, res) => {
   }
 
   try {
-    const users = await User.findAll({ order: [["id", "DESC"]] });
+    const users = await User.findAll({
+      include: { model: Permission },
+      order: [["id", "DESC"]],
+    });
     res.status(201).json({
       response: "success",
       users,
@@ -114,7 +117,10 @@ export const getUserById = async (req, res) => {
   // Convert id to integer
   parseInt(id);
 
-  const user = await User.findByPk(id);
+  const user = await User.findOne({
+    where: { id: id },
+    include: { model: Permission },
+  });
 
   if (!user) {
     return res.status(400).json({
@@ -125,7 +131,7 @@ export const getUserById = async (req, res) => {
   }
 
   try {
-    res.status(201).json({ type: "success", user });
+    res.status(201).json({ response: "success", user });
   } catch (error) {
     console.log(error);
     res
@@ -166,7 +172,7 @@ export const updateUser = async (req, res) => {
     });
   }
 
-  if (email) {
+  if (email !== user.email) {
     // Check if user already exists
     const emailExists = await User.findOne({ where: { email: email } });
 

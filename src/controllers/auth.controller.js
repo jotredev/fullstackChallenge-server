@@ -45,6 +45,6 @@ export const login = async (req, res) => {
 
 // Get profile
 export const getProfile = async (req, res) => {
-  const { user } = req;
-  return res.status(201).json(user);
+  const { auth } = req;
+  return res.status(201).json(auth);
 };
