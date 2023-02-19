@@ -16,6 +16,33 @@ import checkAuth from "../../middlewares/checkAuth";
 const router = express.Router();
 
 // Create user, get all users
+/**
+ * @Route POST /api/v1/users/
+ * @openapi
+ * /users:
+ *   post:
+ *    tags:
+ *      - Users
+ *    summary: "Create user"
+ *    description: "Create user"
+ *    security:
+ *      - bearerAuth: []
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/createUser'
+ *    responses:
+ *      201:
+ *        description: "Usuario creado correctamente"
+ *      403:
+ *        description: "No tienes permisos para realizar esta acción"
+ *      404:
+ *        description: "El email ya se encuentra registrado"
+ *      500:
+ *        description: "Error del servidor"
+ */
 router
   .route("/")
   .post(validatorCreateUser, checkAuth, createUser)

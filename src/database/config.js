@@ -4,7 +4,10 @@ import dotenv from "dotenv";
 // Configure environment variables
 dotenv.config();
 
-const database = process.env.MYSQL_DATABASE;
+const database =
+  process.env.NODE_ENV === "development"
+    ? process.env.MYSQL_DATABASE_TEST
+    : process.env.MYSQL_DATABASE;
 const username = process.env.MYSQL_USER;
 const password = process.env.MYSQL_PASSWORD;
 const host = process.env.MYSQL_HOST;

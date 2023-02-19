@@ -1,6 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import swaggerUI from "swagger-ui-express";
+import openApiConfig from "../documentation/swagger";
 // Routes
 import userRoutes from "./routes/v1/user.routes";
 import authRoutes from "./routes/v1/auth.routes";
@@ -22,6 +24,10 @@ app.use(express.urlencoded({ extended: false }));
 // Configure environment variables
 dotenv.config();
 
+// Configure express app
+const PORT = process.env.PORT || 4000;
+const NODE_ENV = process.env.NODE_ENV || "development";
+
 // Connect to database
 (async () => {
   try {
@@ -33,9 +39,6 @@ dotenv.config();
   }
 })();
 
-// Configure express app
-const PORT = process.env.PORT || 4000;
-
 // Cors
 app.use(cors());
 
@@ -43,8 +46,18 @@ app.use(cors());
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/posts", postRoutes);
+// Routing documentation
+app.use(
+  "/api/v1/documentation",
+  swaggerUI.serve,
+  swaggerUI.setup(openApiConfig)
+);
 
 // Start express app
-app.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
-});
+if (NODE_ENV === "development") {
+  app.listen(PORT, () => {
+    console.log(`Server is listening on port ${PORT}`);
+  });
+}
+
+export default app;
