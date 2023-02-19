@@ -9,6 +9,7 @@ import {
   createPost,
   createReview,
   deletePost,
+  getAllLogs,
   getAllPosts,
   getPostById,
   updatePost,
@@ -30,5 +31,8 @@ router
   .get(validatorId, getPostById)
   .put(validatorId, checkAuth, updatePost)
   .delete(validatorId, checkAuth, deletePost);
+
+// Get all logs
+router.get("/logs/all", checkAuth, getAllLogs);
 
 export default router;

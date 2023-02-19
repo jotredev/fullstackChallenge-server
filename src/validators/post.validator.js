@@ -22,11 +22,6 @@ export const validatorCreateReview = [
     .isInt()
     .withMessage("The parameter must be integer"),
   check("name").exists().withMessage("The name of user is required"),
-  check("rating")
-    .exists()
-    .withMessage("The rating is required")
-    .isInt({ min: 1, max: 5 })
-    .withMessage("The rating must be an integer between 1 and 5"),
   check("comment").exists().withMessage("The comment of user is required"),
   (req, res, next) => {
     try {

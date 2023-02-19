@@ -1,6 +1,7 @@
 import Post from "../models/post.model";
 import Log from "../models/log.model";
 import Review from "../models/reviews.model";
+import User from "../models/user.model";
 
 // Create post
 export const createPost = async (req, res) => {
@@ -55,10 +56,13 @@ export const getAllPosts = async (req, res) => {
   try {
     // Get all posts with reviews
     const posts = await Post.findAll({
-      include: {
-        model: Review,
-        attributes: ["name", "rating", "comment", "createdAt"],
-      },
+      include: [
+        {
+          model: Review,
+          attributes: ["name", "comment", "createdAt"],
+        },
+        { model: User, attributes: ["name", "lastname", "email"] },
+      ],
       order: [["createdAt", "DESC"]],
     });
 
@@ -75,7 +79,7 @@ export const getAllPosts = async (req, res) => {
 // Create review
 export const createReview = async (req, res) => {
   const { id } = req.params;
-  const { name, rating, comment } = req.body;
+  const { name, comment } = req.body;
 
   // Get post by id
   const post = await Post.findByPk(id);
@@ -92,7 +96,6 @@ export const createReview = async (req, res) => {
     // Create review
     const review = new Review({
       name,
-      rating,
       comment,
       id_post: post.id,
     });
@@ -116,7 +119,6 @@ export const getPostById = async (req, res) => {
   // Get post
   const post = await Post.findOne({
     where: { id },
-    include: { model: Review, required: true },
   });
 
   if (!post) {
@@ -239,6 +241,39 @@ export const deletePost = async (req, res) => {
 
     // Response
     res.status(201).json({ response: "success", msg: "Deleted post" });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ response: "error", type: "server-error", msg: "Server error" });
+  }
+};
+
+// Get all logs
+export const getAllLogs = async (req, res) => {
+  const { auth } = req;
+
+  // Verify is admin
+  const isAdmin = auth?.permissions.some(
+    (permission) => permission.name === "admin"
+  );
+
+  if (!isAdmin) {
+    return res.status(403).json({
+      response: "error",
+      type: "not-admin",
+      msg: "Not admin",
+    });
+  }
+
+  try {
+    // Get all logs with
+    const logs = await Log.findAll({
+      order: [["createdAt", "DESC"]],
+    });
+
+    // Response
+    res.status(201).json({ response: "success", logs });
   } catch (error) {
     console.log(error);
     res
